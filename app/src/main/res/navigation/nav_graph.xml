@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/homeFragment">
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.ksc.geotasker.ui.fragment.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_addOrUpdateTaskFragment"
+            app:destination="@id/addOrUpdateTaskFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_viewTaskBottomFragment"
+            app:destination="@id/viewTaskBottomFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addOrUpdateTaskFragment"
+        android:name="com.ksc.geotasker.ui.fragment.AddOrUpdateTaskFragment"
+        android:label="fragment_add_or_update"
+        tools:layout="@layout/fragment_add_or_update" >
+        <action
+            android:id="@+id/action_addOrUpdateTaskFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_addOrUpdateTaskFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.ksc.geotasker.ui.fragment.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" />
+    <dialog
+        android:id="@+id/viewTaskBottomFragment"
+        android:name="com.ksc.geotasker.ui.fragment.ViewTaskBottomFragment"
+        android:label="fragment_view_task_bottom"
+        tools:layout="@layout/fragment_view_task_bottom" >
+        <action
+            android:id="@+id/action_viewTaskBottomFragment_to_addOrUpdateTaskFragment"
+            app:destination="@id/addOrUpdateTaskFragment" />
+    </dialog>
+</navigation>

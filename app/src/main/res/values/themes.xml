@@ -1,0 +1,7 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.GeoTasker" parent="Theme.MaterialComponents.Light.DarkActionBar">
+
+    </style>
+    <style name="Theme.GeoTasker" parent="Base.Theme.GeoTasker" />
+</resources>
