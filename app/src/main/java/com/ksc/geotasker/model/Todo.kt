@@ -14,9 +14,9 @@ data class Todo(
     @ColumnInfo(name = "description")
     val description: String?,
     @ColumnInfo(name = "date_and_time")
-    val dateAndTime: Long?,
+    val dateAndTime: String?,
     @ColumnInfo(name = "location")
     val location: String?,
     @ColumnInfo(name = "completed")
     val completed: Boolean?
-)
+) : java.io.Serializable
