@@ -1,15 +1,19 @@
 package com.ksc.geotasker.ui.fragment
 
 
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -18,6 +22,7 @@ import com.ksc.geotasker.database.TodoDatabase.Companion.getDatabase
 import com.ksc.geotasker.databinding.FragmentAddOrUpdateBinding
 import com.ksc.geotasker.model.Todo
 import com.ksc.geotasker.ui.MainActivity
+import com.ksc.geotasker.utils.LocalNotification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,6 +34,8 @@ class AddOrUpdateTaskFragment : Fragment() {
     private lateinit var binding: FragmentAddOrUpdateBinding
     private lateinit var navController: NavController
     private var task: Todo? = null
+    private lateinit var notificationManager: NotificationManager
+    private lateinit var notification: NotificationCompat.Builder
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
@@ -37,12 +44,22 @@ class AddOrUpdateTaskFragment : Fragment() {
         if (task != null) {
             binding.btnSetLocation.visibility = View.GONE
         }
+        notificationManager =
+            requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        notification = NotificationCompat.Builder(requireContext(), LocalNotification().CHANNEL_ID)
+        notification.apply {
+            setContentTitle("Test Notification")
+            setContentText("This is a test notification")
+            setSmallIcon(R.drawable.baseline_delete_24)
+        }
+            .build()
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentAddOrUpdateBinding.inflate(inflater, container, false)
         val database = getDatabase(requireContext())
         binding.btnSetLocation.setOnClickListener {
@@ -73,7 +90,6 @@ class AddOrUpdateTaskFragment : Fragment() {
                     binding.etDescription.setText(newTextWithBullet)
                     binding.etDescription.setSelection(newTextWithBullet.length) // Move cursor to the end
                 }
-
                 // Check if the last character is a line break (\n)
                 val lastChar = if (newText.isNotEmpty()) newText.last() else ' '
                 if (lastChar == '\n') {
@@ -86,8 +102,6 @@ class AddOrUpdateTaskFragment : Fragment() {
             }
         })
 
-
-
         binding.iBtnSubmit.setOnClickListener {
             val title = binding.etTitle.text.toString()
             val description = binding.etDescription.text.toString()
@@ -96,19 +110,16 @@ class AddOrUpdateTaskFragment : Fragment() {
                 if (task != null) {
                     binding.btnSetLocation.visibility = View.GONE
                     Toast.makeText(requireContext(), "Task Updated", Toast.LENGTH_SHORT).show()
-                    // Check if task exists (meaning it's an update operation)
                     CoroutineScope(Dispatchers.IO).launch {
-
-                        // Update the existing task in the database
                         database.todoDao()
                             .update(task!!.copy(title = title, description = description))
                     }
                 } else {
-                    Toast.makeText(requireContext(), "Task Created", Toast.LENGTH_SHORT).show()
                     val dateTime = getCurrentDateTime()
-
+                    Toast.makeText(requireContext(), "Task Added", Toast.LENGTH_SHORT).show()
+                    dateTime.replace("pm", "PM /").replace("am", "AM /")
+                    notificationManager.notify(1, notification.build())
                     CoroutineScope(Dispatchers.IO).launch {
-
                         database.todoDao()
                             .insert(Todo(0, title, description, dateTime, "Lucknow", false))
                     }
@@ -121,16 +132,12 @@ class AddOrUpdateTaskFragment : Fragment() {
                     .show()
             }
         }
-
-
         return binding.root
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         (activity as AppCompatActivity).supportActionBar?.show()
     }
-
     companion object {}
 
     private fun navigateToHomeActivity() {
@@ -140,16 +147,16 @@ class AddOrUpdateTaskFragment : Fragment() {
         activity?.finish()
     }
 
-    fun getDataFromBottom() {
+    private fun getDataFromBottom() {
         task = arguments?.getSerializable("update_item") as? Todo
         binding.etTitle.setText(task?.title)
         binding.etDescription.setText(task?.description)
     }
 
-    fun getCurrentDateTime(): String {
+    private fun getCurrentDateTime(): String {
         val dateTime = LocalDateTime.now()
         val formattedDateTime =
-            DateTimeFormatter.ofPattern("EEEE dd-MM-yyyy").format(dateTime)
+            DateTimeFormatter.ofPattern("hh:mm a EEEE dd-MM-yyyy").format(dateTime)
         return formattedDateTime
     }
 }

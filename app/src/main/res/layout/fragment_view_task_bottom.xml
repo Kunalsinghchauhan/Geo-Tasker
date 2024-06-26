@@ -103,5 +103,12 @@
                 android:textSize="10sp"
                 android:textStyle="italic" />
         </LinearLayout>
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/bottom_fragment_animation"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            app:lottie_rawRes="@raw/bottom_fragment"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"/>
     </LinearLayout>
 </FrameLayout>

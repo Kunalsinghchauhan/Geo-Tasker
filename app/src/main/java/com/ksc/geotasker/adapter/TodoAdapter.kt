@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 class TodoAdapter() : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
 
-    private var todoList: List<Todo> = ArrayList()
+     var todoList: List<Todo> = ArrayList()
 
     class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvTitle: TextView = itemView.findViewById(R.id.tv_title)
@@ -53,10 +53,11 @@ class TodoAdapter() : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
             if (isChecked) {
                 val database = TodoDatabase.getDatabase(holder.itemView.context)
                 CoroutineScope(Dispatchers.IO).launch {
-                    delay(1000)
+                    delay(500)
                     database.todoDao().delete(currentItem)
                 }
-                Toast.makeText(holder.itemView.context, "Checked", Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(holder.itemView.context, "Deleted", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -65,6 +66,5 @@ class TodoAdapter() : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
     fun setData(it: List<Todo>) {
         this.todoList = it
         notifyDataSetChanged()
-
     }
 }

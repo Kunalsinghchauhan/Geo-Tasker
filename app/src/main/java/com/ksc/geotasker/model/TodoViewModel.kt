@@ -9,7 +9,7 @@ import com.ksc.geotasker.repository.TodoRepository
 import kotlinx.coroutines.launch
 
 class TodoViewModel(application: Application) : AndroidViewModel(application) {
-
+    val counter = 0
     private val repository: TodoRepository
     val  allTasks: LiveData<List<Todo>>
 

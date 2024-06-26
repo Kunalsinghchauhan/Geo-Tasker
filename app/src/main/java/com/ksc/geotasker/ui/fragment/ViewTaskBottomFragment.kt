@@ -23,12 +23,11 @@ class ViewTaskBottomFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val database = getDatabase(requireContext())
         navController = findNavController()
         val task = arguments?.getSerializable("clicked_item") as? Todo
         task?.let {
-            val title = "title - ${it.title}"
+            val title = "task - ${it.title}"
             val description = it.description
             val id = it.id
             val dateAndTime = id.toString()
@@ -47,13 +46,10 @@ class ViewTaskBottomFragment : BottomSheetDialogFragment() {
             }
         }
 
-
-
         binding.ivEditTask.setOnClickListener {
             val bundle = Bundle()
             bundle.putSerializable("update_item", task)
             task?.let {
-                Log.d("ViewTaskBottomFragment", "Navigating with task: $it")
                 navController.navigate(
                     R.id.action_viewTaskBottomFragment_to_addOrUpdateTaskFragment,
                     bundle
