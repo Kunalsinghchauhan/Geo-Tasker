@@ -34,8 +34,6 @@ class AddOrUpdateTaskFragment : Fragment() {
     private lateinit var binding: FragmentAddOrUpdateBinding
     private lateinit var navController: NavController
     private var task: Todo? = null
-    private lateinit var notificationManager: NotificationManager
-    private lateinit var notification: NotificationCompat.Builder
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
@@ -44,16 +42,6 @@ class AddOrUpdateTaskFragment : Fragment() {
         if (task != null) {
             binding.btnSetLocation.visibility = View.GONE
         }
-        notificationManager =
-            requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        notification = NotificationCompat.Builder(requireContext(), LocalNotification().CHANNEL_ID)
-        notification.apply {
-            setContentTitle("Test Notification")
-            setContentText("This is a test notification")
-            setSmallIcon(R.drawable.baseline_delete_24)
-        }
-            .build()
 
     }
 
@@ -63,7 +51,7 @@ class AddOrUpdateTaskFragment : Fragment() {
         binding = FragmentAddOrUpdateBinding.inflate(inflater, container, false)
         val database = getDatabase(requireContext())
         binding.btnSetLocation.setOnClickListener {
-            navController.navigate(R.id.action_addOrUpdateTaskFragment_to_mapFragment)
+            navController.navigate(R.id.action_addOrUpdateTaskFragment_to_mapsFragment)
         }
 
         binding.iBtnBack.setOnClickListener {
@@ -118,13 +106,11 @@ class AddOrUpdateTaskFragment : Fragment() {
                     val dateTime = getCurrentDateTime()
                     Toast.makeText(requireContext(), "Task Added", Toast.LENGTH_SHORT).show()
                     dateTime.replace("pm", "PM /").replace("am", "AM /")
-                    notificationManager.notify(1, notification.build())
                     CoroutineScope(Dispatchers.IO).launch {
                         database.todoDao()
                             .insert(Todo(0, title, description, dateTime, "Lucknow", false))
                     }
                 }
-
                 navController.navigate(R.id.action_addOrUpdateTaskFragment_to_homeFragment)
                 navigateToHomeActivity()
             } else {

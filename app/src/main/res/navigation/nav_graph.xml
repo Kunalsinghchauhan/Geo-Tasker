@@ -22,17 +22,12 @@
         android:label="fragment_add_or_update"
         tools:layout="@layout/fragment_add_or_update" >
         <action
-            android:id="@+id/action_addOrUpdateTaskFragment_to_mapFragment"
-            app:destination="@id/mapFragment" />
-        <action
             android:id="@+id/action_addOrUpdateTaskFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_addOrUpdateTaskFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/mapFragment"
-        android:name="com.ksc.geotasker.ui.fragment.MapFragment"
-        android:label="fragment_map"
-        tools:layout="@layout/fragment_map" />
     <dialog
         android:id="@+id/viewTaskBottomFragment"
         android:name="com.ksc.geotasker.ui.fragment.ViewTaskBottomFragment"
@@ -42,4 +37,13 @@
             android:id="@+id/action_viewTaskBottomFragment_to_addOrUpdateTaskFragment"
             app:destination="@id/addOrUpdateTaskFragment" />
     </dialog>
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.ksc.geotasker.ui.fragment.MapsFragment"
+        android:label="fragment_maps"
+        tools:layout="@layout/fragment_maps" >
+        <action
+            android:id="@+id/action_mapsFragment_to_addOrUpdateTaskFragment"
+            app:destination="@id/addOrUpdateTaskFragment" />
+    </fragment>
 </navigation>
